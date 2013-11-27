@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Quadratic Equation Solver</title>
+
+    <!-- References -->
+	<link href="css/default.css" rel="stylesheet" />
+    <link href="css/modern.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+	
+
+    <!--  The script-->
+    <script>
+        function solve() {
+            a = parseFloat(document.getElementById("a").value); //convert entry to a float
+            b = parseFloat(document.getElementById("b").value);
+            c = parseFloat(document.getElementById("c").value);
+            
+			//if entry is non-numeric then just default it to zero
+			//alternatively we could alert the user with:
+			//alert("The enter value is Not a Number");
+            if (isNaN(a))
+				{
+				document.getElementById("warning").innerHTML = "Warning! Input must be a number";
+				a = 0;
+				}
+            if (isNaN(b))
+				{
+				document.getElementById("warning").innerHTML = "Warning! Input must be a number";
+				b = 0;
+				}
+            if (isNaN(c))
+				{
+				document.getElementById("warning").innerHTML = "Warning! Input must be a number";
+				c = 0;
+				}
+
+            window.a = a;
+            window.b = b;
+            window.c = c;
+
+            //since a is !=0 then we assume it's a second degree equation
+            if (a != 0) {
+
+                delta = b * b - 4 * a * c
+
+                function par(n) {
+                    if (n < 0) return "(" + n + ")";
+                    else return n;
+                }
+
+                function sum(n) {
+                    if (n < 0) return +n;
+                    else return " + " + n;
+                }
+
+
+                txt = "Second degree polynomial with:"
+				//the $$ signs are to render string in pretty LaTex
+                txt += "$$ \\Delta = " + par(b) + "^2 - 4 \* " + par(a) + " \* " + par(c) + " = " + delta + "$$"
+
+                if (delta < 0) {
+
+                    x1 = ((-b + Math.sqrt(-delta)) / (2 * a));
+                    x2 = ((-b - Math.sqrt(-delta)) / (2 * a));
+                    xv = (-b) / (2 * a);
+                    yv = a * xv * xv + b * xv + c;
+
+                    txt += "The discriminant is less than zero therefore we have complex roots."
+                    txt += "<br \>"
+                    txt += "Roots:"
+                    txt += "\\\[x_1 = \\frac{-b + \\sqrt{\\Delta}}{2a} = \\frac{" + -b + " + \\sqrt{" + delta + "}}{" + 2 * a + "} = " + (-b / 2 * a) + sum(Math.sqrt(-delta).toPrecision(3)) + "i\\\]";
+
+
+                    txt += "\\\[x_2 = \\frac{-b - \\sqrt{\\Delta}}{2a} = \\frac{" + -b + " - \\sqrt{" + delta + "}}{" + 2 * a + "} = " + (-b / 2 * a) + sum(-Math.sqrt(-delta).toPrecision(3)) + "i\\\]";
+                    if (a > 0) {
+                        txt += "Minimum occurs at: $$(" + xv.toPrecision(2) + ", " + yv.toPrecision(2) + ")$$"
+                    } else {
+                        txt += "Maximum occurs at: $$(" + xv.toPrecision(2) + "," + yv.toPrecision(2) + ")$$"
+                    }
+
+                } else {
+                    x1 = ((-b + Math.sqrt(delta)) / (2 * a));
+                    x2 = ((-b - Math.sqrt(delta)) / (2 * a));
+
+                    xv = (-b) / (2 * a);
+                    yv = a * xv * xv + b * xv + c;
+                    txt += "<br \>"
+                    txt += "Roots:"
+                    txt += "\\\[x_1 = \\frac{-b + \\sqrt{\\Delta}}{2a} = \\frac{" + -b + " + " + Math.sqrt(delta).toPrecision(3) + "}{" + 2 * a + "} = " + x1.toPrecision(3) + "\\\]";
+                    txt += "\\\[x_2 = \\frac{-b - \\sqrt{\\Delta}}{2a} = \\frac{" + -b + " - " + Math.sqrt(delta).toPrecision(3) + "}{" + 2 * a + "} = " + x2.toPrecision(3) + "\\\]";
+
+                    if (a > 0) {
+                        txt += "Minimum occurs at: $$(" + xv.toPrecision(2) + "," + yv.toPrecision(2) + ")$$"
+                    } else {
+                        txt += "Maximum occurs at: $$(" + xv.toPrecision(2) + "," + yv.toPrecision(2) + ")$$"
+                    }
+                }
+                document.getElementById("results").innerHTML = txt;
+
+                if (x1 == x2) {
+                    setMaxX(x1 + 2.5);
+                    setMinX(x1 - 2.5);
+                }
+                else {
+                    setMaxX(Math.max(x1 + 1.5, x2 + 1.5));
+                    setMinX(Math.min(x1 - 1.5, x2 - 1.5));
+                }
+
+                if (yv < 0) {
+                    setMaxY(+1.15);
+                    setMinY(yv - 1.5);
+                } else {
+                    setMaxY(yv + 1.5);
+                    setMinY(-1.15);
+                }
+
+
+                // Draw canvas 
+                if (delta >= 0) {
+                    DrawParabola(a, b, c, x1, x2, xv, yv);
+                } else {
+                    DrawParabola(a, b, c, null, null, xv, yv);
+                }
+
+            } else {
+
+                if (b == 0) {
+                    if (c == 0) { document.getElementById("results").innerHTML = "Infinite solutions\n" }
+                    else { document.getElementById("results").innerHTML = "There is no solution" }
+                } else {
+                    x1 = -c / b;
+                    y = c;
+                    if (x1 > 0) {
+                        setMaxX(x1 + 1.5);
+                        setMinX(-1.5);
+                    }
+                    else {
+                        setMaxX(+1.5);
+                        setMinX(x1 - 1.5);
+                    }
+
+                    if (y > 0) {
+                        setMaxY(y + 1.5);
+                        setMinY(-1.5);
+                    } else {
+                        setMaxY(+1.5);
+                        setMinY(y - 1.5);
+                    }
+
+                    txt = "\n"
+                    txt += "This is a first degree polynomial:\n"
+                    txt += "\\\[x = \\frac{-c}{b} = \\frac{" + -c + "}{" + b + "} = " + x1.toPrecision(3) + "\\\]";
+
+                    document.getElementById("results").innerHTML = txt;
+
+                    // Draw canvas
+                    DrawLine(b, c, x1);
+
+                }
+            }
+
+            // Update the formulas
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    </script>
+</head>
+
+<body class="metrouicss" onload="javascript:solve()" >
+    <div id="appTitle">
+        <h1>Quadratic Equation Solver</h1>
+    </div>
+
+
+    <div id="formula">
+        <div class="tag">Formula</div>
+
+        <p>
+            <br />
+
+            $$ ax^2+bx+c=0$$ <span style="font-weight: 500">has the solutions: </span>$$x=\frac{-b\pm\sqrt{b^2-4ac\ }}{2a}$$
+
+
+
+
+
+        </p>
+
+        <span style="font-weight: 500">the discriminant is given by: </span>$$\Delta = b^2 - 4ac$$
+	
+
+    </div>
+
+    <div id="input">
+        <div id="inputTag" class="tag">Input</div>
+		<div id="warning"></div>
+        <!--initialize values-->
+        a=
+        <input type="number" style="width: 2em" id="a" value="3" onkeydown="solve()" onkeyup="solve()" />
+        <br />
+        b=
+        <input type="number" style="width: 2em" id="b" value="2" onkeydown="solve()" onkeyup="solve()" />
+        <br />
+        c=
+        <input type="number" style="width: 2em" id="c" value="1" onkeydown="solve()" onkeyup="solve()" />
+
+    </div>
+
+    <div id="resultsDiv">
+        <div id="resultsTag" class="tag">Results and Graph</div>
+
+        <div id="results">
+        </div>
+        <canvas id="xy-graph" width="600" height="300"></canvas>
+    </div>
+
+    <div id="graph">
+    </div>
+
+
+    <script src="js/canvas-graph.js"></script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true
+            },
+            TeX: {
+            extensions: ["AMSmath.js", "AMSsymbols.js"]
+            },
+            "HTML-CSS": { availableFonts: ["TeX"] }
+        });
+    </script>
+<script src="js/MathJax/MathJax.js"></script>
+
+	
+</body>
+</html>

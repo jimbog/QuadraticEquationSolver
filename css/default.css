@@ -1,0 +1,53 @@
+﻿#appTitle {
+     
+    /*background:darkgrey;*/
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+text-align:center;
+
+} 
+
+#formula {
+
+border-top:solid;
+/*background:#ba7b7b;*/
+position:auto;
+
+top:4em;
+}
+
+#input {
+	border-top:solid;
+/*position:auto;*/
+text-align:center;
+
+background:#6dcff6;
+/*width:25%;*/
+}
+
+#resultsDiv {
+border-top:solid;
+position:auto;
+text-align:center;
+
+}
+
+
+#xy-graph{
+border-top:solid;
+	position:auto;
+
+	border:solid;
+	border-color:#6dcff6;
+	}
+
+
+.tag {
+
+   
+text-align:center;
+text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+font-weight:bold;
+font-size:xx-large
+
+}
+
